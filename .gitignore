@@ -29,5 +29,4 @@ pnpm-debug.log*
 /public/zip/*
 !/public/zip/.keep
 
-/tmp/*
-!/tmp/.keep
+/tmp

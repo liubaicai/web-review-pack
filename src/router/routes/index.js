@@ -7,6 +7,9 @@ const dayjs = require("dayjs");
 const router = express.Router();
 const { zip, COMPRESSION_LEVEL } = require("zip-a-folder");
 
+const editor_host = process.env.EDITOR_HOST || "";
+const editor_port = process.env.EDITOR_PORT || "8443";
+
 function getFolderSize(path) {
   return new Promise((resolve, reject) => {
     getSize(path, (err, size) => {
@@ -32,10 +35,14 @@ router.get("/", async function (req, res, next) {
       size: size,
     });
   }
-  res.render("pages/index", { dirs: dirsData });
+  const real_editor_host = editor_host || req.hostname
+  res.render("pages/index", { 
+    dirs: dirsData,
+    editor_url: `//${real_editor_host}:${editor_port}/?folder=/config/workspace`,
+   });
 });
 
-/* GET home page. */
+
 router.get("/download/:name", async function (req, res, next) {
   const timeNow = new Date().getTime();
   const filename = `./public/zip/${req.params.name}.${timeNow}.zip`;

@@ -21,6 +21,7 @@
           <td class="date"><%= dirs[i].mtime %></td>
           <td class="methods">
             <a href="review/<%= dirs[i].name %>" target="_blank" title="<%= dirs[i].name %>">预览</a>
+            <a href="<%= editor_url %>/<%= dirs[i].name %>" target="_blank" title="<%= dirs[i].name %>">编辑</a>
             <a href="download/<%= dirs[i].name %>" target="_blank" title="<%= dirs[i].name %>">下载</a>
           </td>
         </tr>
