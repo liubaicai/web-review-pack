@@ -1,0 +1,39 @@
+<div>
+  <h3 id="">客户定制化仿真包在线预览</h3>
+</div>
+<h1>在线预览: /</h1>
+<table id="list">
+  <thead>
+    <tr>
+      <th style="width: 35%">File Name</th>
+      <th style="width: 20%">File Size</th>
+      <th style="width: 25%">Date</th>
+      <th style="width: 20%">-</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% for(var i=0; i < dirs.length; i++) { %>
+        <tr>
+          <td class="name">
+            <%= dirs[i].name %>
+          </td>
+          <td class="size"><%= (dirs[i].size / 1024 / 1024).toFixed(2) + ' MB' %></td>
+          <td class="date"><%= dirs[i].mtime %></td>
+          <td class="methods">
+            <a href="review/<%= dirs[i].name %>" target="_blank" title="<%= dirs[i].name %>">预览</a>
+            <a href="download/<%= dirs[i].name %>" target="_blank" title="<%= dirs[i].name %>">下载</a>
+          </td>
+        </tr>
+     <% } %>
+  </tbody>
+</table>
+<div id="raw_include_README_md"></div>
+<footer>
+  Powerby <a href="https://github.com/liubaicai">liubaicai</a>, © 2022.
+</footer>
+<script src="https://unpkg.com/xregexp/xregexp-all.js"></script>
+<script type="text/javascript" src="/js/addNginxFancyIndexForm.js"></script>
+<script type="text/javascript" src="/js/showdown.min.js"></script>
+<script type="text/javascript" defer>
+  var converter = new showdown.Converter({ tables: true });
+</script>
