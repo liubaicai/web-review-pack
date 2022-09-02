@@ -1,6 +1,7 @@
-# another one nodejs startkit
-expressjs + ejs + less   
-hotreload for dev
+# web项目预览、编辑、打包下载
+
+web项目存放：/public/review
+
 ``` shell
 # dependencies
 npm ci
