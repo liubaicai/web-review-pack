@@ -3,10 +3,6 @@
 web项目存放：/public/review
 
 ``` shell
-# dependencies
-npm ci
-# run for dev
-npm run dev
-# run for prod
-npm run start:prod
+cp docker-compose.yml.demo docker-compose.yml
+docker-compose up -d --build
 ```
