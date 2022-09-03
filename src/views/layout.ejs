@@ -6,17 +6,30 @@
     <title>定制化仿真包</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="Shortcut Icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="/stylesheets/styles.css" />
     <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/styles.css" />
   </head>
 
   <body>
+    <div class="q-header">
+      <h3 onclick="javascript:window.location.href='/'">客户定制化仿真包在线预览</h3>
+      <form
+        class="q-form"
+        method="POST"
+        action="/upload"
+        enctype="multipart/form-data"
+      >
+        <a href="javascript:;" class="file"
+          >上传文件包
+          <input type="file" name="file" id="file" />
+        </a>
+      </form>
+    </div>
     <%-body%>
+    <script>
+      $(".q-form").on("change", "input[type='file']", function () {
+        $(".q-form").submit();
+      });
+    </script>
   </body>
 </html>
-<!--
-footer.html
-© 2015-18, Lilian Besson (Naereen) and contributors,
-open-sourced under the MIT License, https://lbesson.mit-license.org/
-hosted on GitHub, https://GitHub.com/Naereen/Nginx-Fancyindex-Theme
--->
