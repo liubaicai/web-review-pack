@@ -23,7 +23,7 @@ pnpm-debug.log*
 *.sw?
 *.db
 
-docker-compose.yml
+/docker-compose.yml
 
 /public/review/*
 !/public/review/.keep
