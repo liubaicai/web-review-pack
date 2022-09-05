@@ -32,7 +32,6 @@
             </a>
           </form>`;
         $("#q-upload").empty();
-        $(".q-form")?.off();
         $(domStr).appendTo($("#q-upload"));
         $(".q-form").on("change", "input[type='file']", function () {
           $(".q-form").submit();
