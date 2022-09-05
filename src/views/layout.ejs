@@ -12,24 +12,32 @@
 
   <body>
     <div class="q-header">
-      <h3 onclick="javascript:window.location.href='/'">客户定制化仿真包在线预览</h3>
-      <!-- <form
-        class="q-form"
-        method="POST"
-        action="/upload"
-        enctype="multipart/form-data"
-      >
-        <a href="javascript:;" class="file"
-          >上传文件包
-          <input type="file" name="file" id="file" />
-        </a>
-      </form> -->
+      <h3 onclick="javascript:window.location.href='/'">
+        客户定制化仿真包在线预览
+      </h3>
+      <div id="q-upload"></div>
     </div>
     <%-body%>
-    <!-- <script>
-      $(".q-form").on("change", "input[type='file']", function () {
-        $(".q-form").submit();
-      });
-    </script> -->
+    <script>
+      window.enableUpload = function () {
+        const domStr = `<form
+            class="q-form"
+            method="POST"
+            action="/upload"
+            enctype="multipart/form-data"
+          >
+            <a href="javascript:;" class="file"
+              >上传文件包
+              <input type="file" name="file" id="file" />
+            </a>
+          </form>`;
+        $("#q-upload").empty();
+        $(".q-form")?.off();
+        $(domStr).appendTo($("#q-upload"));
+        $(".q-form").on("change", "input[type='file']", function () {
+          $(".q-form").submit();
+        });
+      };
+    </script>
   </body>
 </html>
