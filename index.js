@@ -15,7 +15,7 @@ const http = require("http");
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-const host = process.env.HOST || "localhost";
+const host = process.env.HOST || "127.0.0.1";
 app.set("host", host);
 
 /**

@@ -1,11 +1,10 @@
-<h1></h1>
 <table id="list">
   <thead>
     <tr>
-      <th style="width: 35%">File Name</th>
-      <th style="width: 20%">File Size</th>
-      <th style="width: 25%">Date</th>
-      <th style="width: 20%">-</th>
+      <th style="width: 40%">文件名</th>
+      <th style="width: 15%">文件大小</th>
+      <th style="width: 20%">修改日期</th>
+      <th style="width: 25%">操作</th>
     </tr>
   </thead>
   <tbody>
@@ -13,26 +12,29 @@
     <tr>
       <td class="name"><%= dirs[i].name %></td>
       <td class="size">
-        <%= (dirs[i].size / 1024 / 1024).toFixed(2) + ' MB' %>
+        <%= (dirs[i].size / 1024 / 1024).toFixed(2) %> MB
       </td>
       <td class="date"><%= dirs[i].mtime %></td>
       <td class="methods">
         <a
+          class="btn-preview"
           href="review/<%= dirs[i].name %>"
           target="_blank"
-          title="<%= dirs[i].name %>"
+          title="预览 <%= dirs[i].name %>"
           >预览</a
         >
         <a
+          class="btn-edit"
           href="<%= editor_url %>/<%= dirs[i].name %>"
           target="_blank"
-          title="<%= dirs[i].name %>"
+          title="编辑 <%= dirs[i].name %>"
           >编辑</a
         >
         <a
+          class="btn-download"
           href="download/<%= dirs[i].name %>"
           target="_blank"
-          title="<%= dirs[i].name %>"
+          title="下载 <%= dirs[i].name %>"
           >下载</a
         >
       </td>
@@ -41,10 +43,27 @@
   </tbody>
 </table>
 <footer>
-  Powerby <a href="https://github.com/liubaicai">liubaicai</a>, © 2022.
+  Powered by <a href="https://github.com/liubaicai">liubaicai</a> © 2022
 </footer>
 <script src="/js/xregexp-all.js"></script>
-<script type="text/javascript" src="/js/addNginxFancyIndexForm.js"></script>
+<script type="text/javascript">
+  // 搜索过滤功能
+  var listItems = [].slice.call(document.querySelectorAll('#list tbody tr'));
+  document.getElementById('search').addEventListener('keyup', function () {
+    var i,
+      e = "(^|.*[^\\pL])" + this.value.trim().split(/\s+/).join("([^\\pL]|[^\\pL].*[^\\pL])") + ".*$",
+      n = RegExp(e, "i");
+    listItems.forEach(function(item) {
+      item.removeAttribute('hidden');
+    });
+    listItems.filter(function(item) {
+      i = item.querySelector('td').textContent.replace(/\s+/g, " ");
+      return !n.test(i);
+    }).forEach(function(item) {
+      item.hidden = true;
+    });
+  });
+</script>
 <script type="text/javascript" src="/js/showdown.min.js"></script>
 <script type="text/javascript" defer>
   var converter = new showdown.Converter({ tables: true });

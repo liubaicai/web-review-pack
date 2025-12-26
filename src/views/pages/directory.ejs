@@ -1,0 +1,251 @@
+<div class="directory-page">
+  <div class="directory-header">
+    <a href="<%= parentPath %>" class="back-link">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+      </svg>
+      返回上级
+    </a>
+    <h2 class="directory-title">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+        <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+      </svg>
+      <%= dirName %>
+    </h2>
+  </div>
+  
+  <% if (files.length === 0) { %>
+    <div class="empty-state">
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
+        <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 12H5c-.55 0-1-.45-1-1V9c0-.55.45-1 1-1h14c.55 0 1 .45 1 1v8c0 .55-.45 1-1 1z"/>
+      </svg>
+      <p>此文件夹为空</p>
+    </div>
+  <% } else { %>
+    <table class="file-list">
+      <thead>
+        <tr>
+          <th style="width: 50%">文件名</th>
+          <th style="width: 20%">大小</th>
+          <th style="width: 30%">修改时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=0; i < files.length; i++) { %>
+        <tr>
+          <td class="file-name">
+            <% if (files[i].isDir) { %>
+              <svg class="file-icon folder-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+              </svg>
+              <a href="/review/<%= dirName %>/<%= files[i].name %>"><%= files[i].name %></a>
+            <% } else { %>
+              <svg class="file-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+              </svg>
+              <a href="/review/<%= dirName %>/<%= files[i].name %>" target="_blank"><%= files[i].name %></a>
+            <% } %>
+          </td>
+          <td class="file-size">
+            <% if (files[i].isDir) { %>
+              -
+            <% } else if (files[i].size < 1024) { %>
+              <%= files[i].size %> B
+            <% } else if (files[i].size < 1024 * 1024) { %>
+              <%= (files[i].size / 1024).toFixed(1) %> KB
+            <% } else { %>
+              <%= (files[i].size / 1024 / 1024).toFixed(2) %> MB
+            <% } %>
+          </td>
+          <td class="file-date"><%= files[i].mtime %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+
+<style>
+.directory-page {
+  background: var(--bg-secondary);
+  min-height: calc(100vh - 100px);
+}
+
+.directory-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-tertiary);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.back-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+  border-color: var(--border-light);
+}
+
+.directory-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.directory-title svg {
+  color: var(--text-muted);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  color: var(--text-muted);
+}
+
+.empty-state svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
+}
+
+.file-list {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.file-list thead tr {
+  background: var(--bg-tertiary);
+}
+
+.file-list th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 14px 20px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.file-list th:first-child {
+  padding-left: 40px;
+}
+
+.file-list th:last-child {
+  padding-right: 40px;
+}
+
+.file-list tbody tr {
+  transition: background 0.15s ease;
+}
+
+.file-list tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.file-list td {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.file-list td:first-child {
+  padding-left: 40px;
+}
+
+.file-list td:last-child {
+  padding-right: 40px;
+}
+
+.file-list tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-icon {
+  flex-shrink: 0;
+  color: var(--text-muted);
+}
+
+.folder-icon {
+  color: #a0926a;
+}
+
+[data-theme="light"] .folder-icon {
+  color: #8a7a4a;
+}
+
+.file-name a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.file-name a:hover {
+  color: var(--text-secondary);
+  text-decoration: underline;
+}
+
+.file-size,
+.file-date {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .directory-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  
+  .file-list th,
+  .file-list td {
+    padding: 12px 16px;
+  }
+  
+  .file-list th:first-child,
+  .file-list td:first-child {
+    padding-left: 20px;
+  }
+  
+  .file-list th:last-child,
+  .file-list td:last-child {
+    padding-right: 20px;
+  }
+}
+</style>

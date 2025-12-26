@@ -67,9 +67,106 @@ router.get("/download/:name", async function (req, res, next) {
   res.redirect(`/zip/${req.params.name}.${timeNow}.zip`);
 });
 
+/* 目录浏览 - 当没有index.html时显示文件列表 */
+router.get("/review/:name", async function (req, res, next) {
+  const reviewpath = `./public/review/${req.params.name}`;
+  const indexPath = path.join(reviewpath, "index.html");
+  
+  // 如果存在index.html，让express.static处理
+  if (fs.existsSync(indexPath)) {
+    return next();
+  }
+  
+  // 如果目录不存在
+  if (!fs.existsSync(reviewpath)) {
+    return next();
+  }
+  
+  // 读取目录内容
+  try {
+    const files = fs.readdirSync(reviewpath);
+    const filesData = files.map(file => {
+      const filePath = path.join(reviewpath, file);
+      const stat = fs.statSync(filePath);
+      return {
+        name: file,
+        isDir: stat.isDirectory(),
+        size: stat.size,
+        mtime: dayjs(stat.mtime).format("YYYY-MM-DD HH:mm:ss")
+      };
+    });
+    
+    // 排序：文件夹在前，然后按名称排序
+    filesData.sort((a, b) => {
+      if (a.isDir && !b.isDir) return -1;
+      if (!a.isDir && b.isDir) return 1;
+      return a.name.localeCompare(b.name);
+    });
+    
+    res.render("pages/directory", {
+      dirName: req.params.name,
+      files: filesData,
+      parentPath: "/"
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/* 子目录浏览 */
+router.get("/review/:name/*", async function (req, res, next) {
+  const subPath = req.params[0];
+  const reviewpath = `./public/review/${req.params.name}/${subPath}`;
+  const indexPath = path.join(reviewpath, "index.html");
+  
+  // 如果是文件或存在index.html，让express.static处理
+  if (!fs.existsSync(reviewpath) || !fs.statSync(reviewpath).isDirectory() || fs.existsSync(indexPath)) {
+    return next();
+  }
+  
+  // 读取目录内容
+  try {
+    const files = fs.readdirSync(reviewpath);
+    const filesData = files.map(file => {
+      const filePath = path.join(reviewpath, file);
+      const stat = fs.statSync(filePath);
+      return {
+        name: file,
+        isDir: stat.isDirectory(),
+        size: stat.size,
+        mtime: dayjs(stat.mtime).format("YYYY-MM-DD HH:mm:ss")
+      };
+    });
+    
+    filesData.sort((a, b) => {
+      if (a.isDir && !b.isDir) return -1;
+      if (!a.isDir && b.isDir) return 1;
+      return a.name.localeCompare(b.name);
+    });
+    
+    res.render("pages/directory", {
+      dirName: `${req.params.name}/${subPath}`,
+      files: filesData,
+      parentPath: (function() {
+        // 移除末尾斜杠后计算父路径
+        const cleanSubPath = subPath.replace(/\/+$/, '');
+        const lastSlash = cleanSubPath.lastIndexOf('/');
+        if (lastSlash > 0) {
+          return `/review/${req.params.name}/${cleanSubPath.substring(0, lastSlash)}`;
+        }
+        return `/review/${req.params.name}`;
+      })()
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post("/upload", async function (req, res, next) {
   const file = req.files?.file;
-  const filename = file?.name?.substring(0, file.name.lastIndexOf("."));
+  // 移除文件名中的空格
+  const rawFilename = file?.name?.substring(0, file.name.lastIndexOf("."));
+  const filename = rawFilename?.replace(/\s+/g, "");
   let reviewpath = `./public/review/${filename}`;
   if (fs.existsSync(reviewpath)) {
     reviewpath = reviewpath + "." + new Date().getTime();
